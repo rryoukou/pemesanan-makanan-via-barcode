@@ -22,7 +22,7 @@ export default function MenuDetail() {
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
-        const response = await fetch(`http://localhost:5029/api/products/${id}`);
+        const response = await fetch(`https://3254jhsj-5029.asse.devtunnels.ms/api/products/${id}`);
         if (response.ok) {
           const data = await response.json();
           setProduct(data);

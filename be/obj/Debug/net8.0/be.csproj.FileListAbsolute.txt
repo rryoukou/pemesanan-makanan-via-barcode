@@ -142,3 +142,4 @@ C:\3PM\pemesanan makanan via barcode\be\obj\Debug\net8.0\refint\be.dll
 C:\3PM\pemesanan makanan via barcode\be\obj\Debug\net8.0\be.pdb
 C:\3PM\pemesanan makanan via barcode\be\obj\Debug\net8.0\be.genruntimeconfig.cache
 C:\3PM\pemesanan makanan via barcode\be\obj\Debug\net8.0\ref\be.dll
+C:\3PM\pemesanan makanan via barcode\be\obj\Debug\net8.0\be.sourcelink.json

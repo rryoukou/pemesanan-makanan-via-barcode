@@ -25,8 +25,8 @@ export default function Menu() {
     try {
       setLoading(true);
       const url = keyword 
-        ? `http://localhost:5029/api/products?search=${keyword}`
-        : `http://localhost:5029/api/products`;
+        ? `https://3254jhsj-5029.asse.devtunnels.ms/api/products?search=${keyword}`
+        : `https://3254jhsj-5029.asse.devtunnels.ms/api/products`;
         
       const response = await fetch(url);
       const data = await response.json();

@@ -30,7 +30,7 @@ export default function AdminInventory() {
   const fetchInventory = async (keyword: string) => {
     try {
       setLoading(true);
-      const url = keyword ? `http://localhost:5029/api/products?search=${keyword}` : `http://localhost:5029/api/products`;
+      const url = keyword ? `https://3254jhsj-5029.asse.devtunnels.ms/api/products?search=${keyword}` : `https://3254jhsj-5029.asse.devtunnels.ms/api/products`;
       const response = await fetch(url);
       const data = await response.json();
       setProducts(data);
@@ -59,7 +59,7 @@ export default function AdminInventory() {
       isAvailable
     };
 
-    const url = isEditing ? `http://localhost:5029/api/products/${currentId}` : `http://localhost:5029/api/products`;
+    const url = isEditing ? `https://3254jhsj-5029.asse.devtunnels.ms/api/products/${currentId}` : `https://3254jhsj-5029.asse.devtunnels.ms/api/products`;
     const method = isEditing ? 'PUT' : 'POST';
 
     try {
@@ -95,7 +95,7 @@ export default function AdminInventory() {
   const handleDeleteClick = async (productId: number) => {
     if (!window.confirm("Apakah kamu yakin ingin menghapus produk menu ini?")) return;
     try {
-      const response = await fetch(`http://localhost:5029/api/products/${productId}`, { method: 'DELETE' });
+      const response = await fetch(`https://3254jhsj-5029.asse.devtunnels.ms/api/products/${productId}`, { method: 'DELETE' });
       if (response.ok) {
         alert("Produk berhasil dihapus dari menu.");
         fetchInventory(search);

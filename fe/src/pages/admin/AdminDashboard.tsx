@@ -32,7 +32,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch('http://localhost:5029/api/dashboard/stats');
+        const response = await fetch('https://3254jhsj-5029.asse.devtunnels.ms/api/dashboard/stats');
         if (response.ok) {
           const data = await response.json();
           setStats(data);

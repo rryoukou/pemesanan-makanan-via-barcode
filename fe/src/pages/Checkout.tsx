@@ -68,7 +68,7 @@ export default function Checkout() {
 
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5029/api/orders', {
+      const response = await fetch('https://3254jhsj-5029.asse.devtunnels.ms/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)

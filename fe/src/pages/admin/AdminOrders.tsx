@@ -31,8 +31,8 @@ export default function AdminOrders() {
     try {
       setLoading(true);
       const url = keyword 
-        ? `http://localhost:5029/api/orders?search=${keyword}`
-        : `http://localhost:5029/api/orders`;
+        ? `https://3254jhsj-5029.asse.devtunnels.ms/api/orders?search=${keyword}`
+        : `https://3254jhsj-5029.asse.devtunnels.ms/api/orders`;
       const response = await fetch(url);
       const data = await response.json();
       setOrders(data);
@@ -50,7 +50,7 @@ export default function AdminOrders() {
   // 2. Fungsi Aksi: Mengubah Status Menjadi Lunas
   const handleMarkAsLunas = async (orderId: number) => {
     try {
-      const response = await fetch(`http://localhost:5029/api/orders/${orderId}/lunas`, {
+      const response = await fetch(`https://3254jhsj-5029.asse.devtunnels.ms/api/orders/${orderId}/lunas`, {
         method: 'PUT'
       });
       if (response.ok) {
@@ -65,7 +65,7 @@ export default function AdminOrders() {
   // 3. Fungsi Aksi: Ambil Data Struk Pembelian
   const handlePrintReceipt = async (orderId: number) => {
     try {
-      const response = await fetch(`http://localhost:5029/api/orders/${orderId}/struk`);
+      const response = await fetch(`https://3254jhsj-5029.asse.devtunnels.ms/api/orders/${orderId}/struk`);
       const data = await response.json();
       if (response.ok) {
         setSelectedReceipt(data);

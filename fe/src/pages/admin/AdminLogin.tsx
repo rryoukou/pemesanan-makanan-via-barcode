@@ -12,7 +12,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5029/api/auth/login', {
+      const response = await fetch('https://3254jhsj-5029.asse.devtunnels.ms/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

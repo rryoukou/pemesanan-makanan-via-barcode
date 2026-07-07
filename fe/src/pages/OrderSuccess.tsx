@@ -26,7 +26,7 @@ export default function OrderSuccess() {
     const fetchOrderData = async () => {
       try {
         // Kita gunakan endpoint GET /api/orders yang mencakup pencarian ID / nama
-        const response = await fetch(`http://localhost:5029/api/orders?search=${id}`);
+        const response = await fetch(`https://3254jhsj-5029.asse.devtunnels.ms/api/orders?search=${id}`);
         if (response.ok) {
           const data = await response.json();
           // Karena data API berbentuk array list, kita ambil index ke-0
