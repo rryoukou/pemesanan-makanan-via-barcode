@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import Menu from './pages/Menu';
-import MenuDetail from './pages/MenuDetail';
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 
@@ -23,12 +22,12 @@ function MainLayout() {
   }, [tableNumber]);
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px', fontFamily: 'sans-serif' }}>
+    // REVISI: Mengubah max-w-sm menjadi w-full agar layout utama bisa responsif & fleksibel mengikuti masing-masing halaman
+    <div className="w-full min-h-svh font-sans">
       <Routes>
         {/* Rute Sisi Customer */}
         <Route path="/" element={<Menu />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/menu/:id" element={<MenuDetail />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-success/:id" element={<OrderSuccess />} />
 
