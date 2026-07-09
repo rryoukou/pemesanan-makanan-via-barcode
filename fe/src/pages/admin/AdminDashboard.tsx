@@ -10,8 +10,10 @@ interface RecentOrder {
   orderDate: string;
 }
 
+// FIX: Menambahkan properti label agar sesuai dengan response backend
 interface ChartData {
   date: string;
+  label?: string;
   revenue: number;
 }
 
@@ -23,7 +25,7 @@ interface ChartPoint {
 interface AvailableMonth {
   year: number;
   month: number;
-  label: string;
+  label: string;  // e.g. "Juli 2026" — returned by backend
 }
 
 interface DashboardStats {
@@ -38,7 +40,7 @@ function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const navItems = [
-    { label: 'Dashboard', path: '/admin/dashboard', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg> },
+    { label: 'Dashboard', path: '/admin/dashboard', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-13.5 18v-2.25z" /></svg> },
     { label: 'Orders', path: '/admin/orders', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg> },
     { label: 'Inventory', path: '/admin/inventory', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg> },
   ];
@@ -77,13 +79,13 @@ export default function AdminDashboard() {
   const [chartPoints, setChartPoints] = useState<ChartPoint[]>([]);
   const [chartLoading, setChartLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [chartMode, setChartMode] = useState<'default' | 'monthly' | 'weekly'>('default');
+  const [chartMode, setChartMode] = useState<'default' | 'yearly' | 'weekly'>('default');
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState<AvailableMonth | null>(null);
   const [dropdownLabel, setDropdownLabel] = useState('Last 7 Days');
   const navigate = useNavigate();
 
-  const BASE = 'https://3254jhsj-5029.asse.devtunnels.ms';
+  const BASE = 'https://localhost';
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -93,8 +95,8 @@ export default function AdminDashboard() {
           const data = await res.json();
           setStats(data);
           if (data.revenueChart?.length) {
-            setChartPoints(data.revenueChart.map((d: ChartData) => ({
-              label: new Date(d.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' }),
+            setChartPoints(data.revenueChart.map((d: { date: string; label: string; revenue: number }) => ({
+              label: d.label,
               revenue: d.revenue,
             })));
           }
@@ -111,12 +113,12 @@ export default function AdminDashboard() {
     fetchMonths();
   }, []);
 
-  const fetchChart = async (mode: 'monthly' | 'weekly', year: number, month?: number, label?: string) => {
+  const fetchChart = async (mode: 'yearly' | 'weekly', year: number, month?: number, label?: string) => {
     setChartLoading(true);
     setShowDropdown(false);
     try {
-      const url = mode === 'monthly'
-        ? `${BASE}/api/dashboard/chart?year=${year}&view=monthly`
+      const url = mode === 'yearly'
+        ? `${BASE}/api/dashboard/chart?year=${year}&view=yearly`
         : `${BASE}/api/dashboard/chart?year=${year}&month=${month}&view=weekly`;
       const res = await fetch(url);
       if (res.ok) {
@@ -129,8 +131,8 @@ export default function AdminDashboard() {
 
   const handleSelectDefault = () => {
     if (!stats) return;
-    setChartPoints(stats.revenueChart?.map((d: ChartData) => ({
-      label: new Date(d.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' }),
+    setChartPoints(stats.revenueChart?.map((d: { date: string; label?: string; revenue: number }) => ({
+      label: d.label ?? '',
       revenue: d.revenue,
     })) ?? []);
     setChartMode('default');
@@ -141,50 +143,98 @@ export default function AdminDashboard() {
   const maxRevenue = chartPoints.length ? Math.max(...chartPoints.map(d => d.revenue), 1) : 1;
   const availableYears = [...new Set(availableMonths.map(m => m.year))].sort((a, b) => b - a);
 
+  const formatYAxis = (val: number) => {
+    if (val === 0) return '0';
+    if (val >= 1_000_000) return `${(val / 1_000_000).toFixed(val % 1_000_000 === 0 ? 0 : 1)}jt`;
+    if (val >= 1_000) return `${Math.round(val / 1_000)}rb`;
+    return val.toLocaleString('id-ID');
+  };
+
   const renderChart = () => {
-    const CHART_HEIGHT = 220;
-    const Y_STEPS = 5;
+    const CHART_H = 220; 
+    const Y_STEPS = 4;
+
     const rawMax = maxRevenue || 1;
     const magnitude = Math.pow(10, Math.floor(Math.log10(rawMax)));
     const niceMax = Math.ceil(rawMax / magnitude) * magnitude;
     const stepValue = niceMax / Y_STEPS;
+    const LABEL_PAD = 8;
+
     return (
-      <div className="flex gap-3">
-        <div className="flex flex-col justify-between items-end shrink-0 pb-7" style={{ height: CHART_HEIGHT }}>
+      <div className="flex gap-3 select-none">
+        <div
+          className="flex flex-col justify-between items-end shrink-0 pb-7"
+          style={{ height: CHART_H }}
+        >
           {Array.from({ length: Y_STEPS + 1 }).map((_, i) => {
             const val = niceMax - i * stepValue;
             return (
-              <span key={i} className="text-[10px] text-stone-400 font-medium whitespace-nowrap">
-                {val >= 1_000_000 ? `${(val / 1_000_000).toFixed(val % 1_000_000 === 0 ? 0 : 1)}jt`
-                  : val >= 1_000 ? `${(val / 1_000).toFixed(0)}rb`
-                  : val.toLocaleString('id-ID')}
+              <span key={i} className="text-[11px] text-stone-400 font-medium whitespace-nowrap leading-none">
+                {formatYAxis(val)}
               </span>
             );
           })}
         </div>
-        <div className="flex-1 flex flex-col">
-          <div className="relative flex items-end gap-2 border-l border-b border-stone-200 bg-gradient-to-b from-amber-50/40 to-white" style={{ height: CHART_HEIGHT - 28 }}>
+
+        <div className="flex-1 flex flex-col min-w-0">
+          <div
+            className="relative flex items-end border-l-2 border-b-2 border-stone-200 bg-gradient-to-b from-stone-50/60 to-white"
+            style={{ height: CHART_H - 28, paddingLeft: LABEL_PAD }}
+          >
             {Array.from({ length: Y_STEPS }).map((_, i) => (
-              <div key={i} className="absolute left-0 right-0 border-t border-dashed border-stone-200" style={{ bottom: `${((i + 1) / Y_STEPS) * 100}%` }} />
+              <div
+                key={i}
+                className="absolute left-0 right-0 border-t border-dashed border-stone-100"
+                style={{ bottom: `${((i + 1) / Y_STEPS) * 100}%` }}
+              />
             ))}
-            {chartPoints.map((point, idx) => {
-              const heightPct = niceMax > 0 ? (point.revenue / niceMax) * 100 : 0;
-              return (
-                <div key={idx} className="relative flex-1 flex flex-col justify-end items-center h-full group">
-                  {point.revenue > 0 && (
-                    <div className="absolute bottom-full mb-2 hidden group-hover:flex bg-stone-800 text-white text-[11px] font-semibold px-2 py-1 rounded-lg whitespace-nowrap z-10">
-                      Rp {point.revenue.toLocaleString('id-ID')}
+
+            <div className="absolute inset-0 flex items-end" style={{ paddingLeft: LABEL_PAD, paddingRight: LABEL_PAD, gap: 6 }}>
+              {chartPoints.map((point, idx) => {
+                const heightPct = niceMax > 0 ? (point.revenue / niceMax) * 100 : 0;
+                const isHighest = point.revenue > 0 && point.revenue === maxRevenue;
+
+                return (
+                  <div
+                    key={idx}
+                    className="relative flex-1 flex flex-col justify-end items-stretch h-full group cursor-pointer"
+                  >
+                    <div className="absolute inset-0 rounded-t-sm" />
+
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-30 pointer-events-none">
+                      <div className="bg-stone-800 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl">
+                        {point.label}
+                        <span className="block text-amber-300 text-center mt-0.5">
+                          Rp {point.revenue.toLocaleString('id-ID')}
+                        </span>
+                      </div>
+                      <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-stone-800" />
                     </div>
-                  )}
-                  <div className="w-full max-w-[40px] rounded-t-md bg-amber-400 hover:bg-amber-500 transition-all duration-300" style={{ height: `${Math.max(heightPct, point.revenue > 0 ? 2 : 0)}%` }} />
-                </div>
-              );
-            })}
+
+                    <div
+                      className={`w-full rounded-t-md transition-all duration-300 group-hover:brightness-90 ${
+                        isHighest
+                          ? 'bg-amber-500'
+                          : point.revenue === 0
+                          ? 'bg-stone-150 opacity-40'
+                          : 'bg-amber-300'
+                      }`}
+                      style={{
+                        height: `${Math.max(heightPct, point.revenue > 0 ? 2 : 0.5)}%`,
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="flex gap-2 mt-1.5">
+
+          <div className="flex mt-2" style={{ paddingLeft: LABEL_PAD, paddingRight: LABEL_PAD, gap: 6 }}>
             {chartPoints.map((point, idx) => (
-              <div key={idx} className="flex-1 flex justify-center">
-                <span className="text-[10px] text-stone-400 font-medium text-center leading-tight">{point.label}</span>
+              <div key={idx} className="flex-1 flex justify-center overflow-hidden">
+                <span className="text-[10px] text-stone-400 font-medium text-center truncate leading-tight">
+                  {point.label}
+                </span>
               </div>
             ))}
           </div>
@@ -256,9 +306,9 @@ export default function AdminDashboard() {
                   <div>
                     <h3 className="text-[16px] font-bold text-stone-800">Grafik Pendapatan</h3>
                     <p className="text-[12px] text-stone-400 mt-0.5">
-                      {chartMode === 'default' ? 'Visualisasi tren pendapatan 7 hari terakhir'
-                        : chartMode === 'monthly' ? `Pendapatan per bulan — Tahun ${selectedYear}`
-                        : `Pendapatan per minggu — ${selectedMonth?.label}`}
+                      {chartMode === 'default' ? '7 hari terakhir yang ada transaksi'
+                        : chartMode === 'yearly' ? `Pendapatan per bulan — Tahun ${selectedYear}`
+                        : `Pendapatan per hari kerja — ${selectedMonth?.label}`}
                     </p>
                   </div>
                   <div className="relative">
@@ -271,27 +321,34 @@ export default function AdminDashboard() {
                         <button onClick={handleSelectDefault} className="w-full text-left px-4 py-2.5 text-[13px] font-semibold text-stone-700 hover:bg-amber-50 hover:text-amber-700 transition border-b border-stone-100">
                           📅 Last 7 Days
                         </button>
-                        <div className="px-4 py-2 border-b border-stone-100">
-                          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">Per Bulan (pilih tahun)</p>
+
+                        <div className="px-4 py-2.5 border-b border-stone-100">
+                          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2">📊 year</p>
                           <div className="flex flex-wrap gap-1.5">
                             {availableYears.length === 0
                               ? <span className="text-[11px] text-stone-400">Belum ada data</span>
                               : availableYears.map(y => (
-                                <button key={y} onClick={() => { setSelectedYear(y); fetchChart('monthly', y, undefined, `Tahun ${y}`); }} className="px-3 py-1 rounded-lg text-[12px] font-semibold bg-stone-100 hover:bg-amber-400 hover:text-white transition">
+                                <button key={y} onClick={() => { setSelectedYear(y); fetchChart('yearly', y, undefined, `Tahun ${y}`); }}
+                                  className="px-3 py-1 rounded-lg text-[12px] font-semibold bg-stone-100 hover:bg-amber-400 hover:text-white transition">
                                   {y}
                                 </button>
                               ))}
                           </div>
                         </div>
-                        <div className="px-4 py-2 max-h-52 overflow-y-auto">
-                          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">Per Minggu (pilih bulan)</p>
-                          {availableMonths.length === 0
-                            ? <span className="text-[11px] text-stone-400">Belum ada data</span>
-                            : availableMonths.map(m => (
-                              <button key={`${m.year}-${m.month}`} onClick={() => { setSelectedMonth(m); fetchChart('weekly', m.year, m.month, m.label); }} className="w-full text-left px-2 py-1.5 text-[12px] font-semibold text-stone-600 hover:bg-amber-50 hover:text-amber-700 rounded-lg transition">
-                                {m.label}
-                              </button>
-                            ))}
+
+                        <div className="px-4 py-2.5">
+                          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">📋 month</p>
+                          <div className="max-h-44 overflow-y-auto space-y-0.5">
+                            {availableMonths.length === 0
+                              ? <span className="text-[11px] text-stone-400">Belum ada data</span>
+                              : availableMonths.map(m => (
+                                <button key={`weekly-${m.year}-${m.month}`}
+                                  onClick={() => { setSelectedMonth(m); fetchChart('weekly', m.year, m.month, m.label); }}
+                                  className="w-full text-left px-2 py-1.5 text-[12px] font-semibold text-stone-600 hover:bg-amber-50 hover:text-amber-700 rounded-lg transition">
+                                  {m.label}
+                                </button>
+                              ))}
+                          </div>
                         </div>
                       </div>
                     )}

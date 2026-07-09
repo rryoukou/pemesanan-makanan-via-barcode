@@ -86,7 +86,7 @@ function ProductFormModal({ isEditing, initial, onSave, onCancel }: ProductFormP
       try {
         const formData = new FormData();
         formData.append('file', selectedFile);
-        const res = await fetch('https://3254jhsj-5029.asse.devtunnels.ms/api/products/upload-image', {
+        const res = await fetch('https://localhost/api/products/upload-image', {
           method: 'POST',
           headers: {
             'X-Tunnel-Skip-Anti-Phishing-Page': 'true',
@@ -200,8 +200,8 @@ export default function AdminInventory() {
     try {
       setLoading(true);
       const url = keyword
-        ? `https://3254jhsj-5029.asse.devtunnels.ms/api/products?search=${keyword}`
-        : `https://3254jhsj-5029.asse.devtunnels.ms/api/products`;
+        ? `https://localhost/api/products?search=${keyword}`
+        : `https://localhost/api/products`;
       const response = await fetch(url);
       setProducts(await response.json());
       setCurrentPage(1);
@@ -220,8 +220,8 @@ export default function AdminInventory() {
   const handleSaveProduct = async (payload: Omit<Product, 'productId'> & { productId: number }) => {
     const isEditing = payload.productId !== 0;
     const url = isEditing
-      ? `https://3254jhsj-5029.asse.devtunnels.ms/api/products/${payload.productId}`
-      : `https://3254jhsj-5029.asse.devtunnels.ms/api/products`;
+      ? `https://localhost/api/products/${payload.productId}`
+      : `https://localhost/api/products`;
 
     // Untuk POST (tambah baru), hapus productId dari body agar tidak bentrok dengan backend
     const body = isEditing
@@ -257,7 +257,7 @@ export default function AdminInventory() {
   const handleDeleteClick = async (productId: number) => {
     if (!window.confirm('Yakin ingin menghapus produk ini?')) return;
     try {
-      const response = await fetch(`https://3254jhsj-5029.asse.devtunnels.ms/api/products/${productId}`, { method: 'DELETE' });
+      const response = await fetch(`https://localhost/api/products/${productId}`, { method: 'DELETE' });
       if (response.ok) fetchInventory(search);
     } catch (error) { console.error('Gagal menghapus produk:', error); }
   };

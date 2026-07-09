@@ -64,8 +64,8 @@ export default function Menu() {
     try {
       setLoading(true);
       const url = keyword
-        ? `https://3254jhsj-5029.asse.devtunnels.ms/api/products?search=${keyword}`
-        : `https://3254jhsj-5029.asse.devtunnels.ms/api/products`;
+        ? `https://localhost/api/products?search=${keyword}`
+        : `https://localhost/api/products`;
       const res = await fetch(url, {
         headers: {
           'X-Tunnel-Skip-Anti-Phishing-Page': 'true',

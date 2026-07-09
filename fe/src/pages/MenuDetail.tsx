@@ -36,7 +36,7 @@ export default function MenuDetail({ id, onClose }: MenuDetailProps) {
     const fetchProductDetail = async () => {
       try {
         const response = await fetch(
-          `https://3254jhsj-5029.asse.devtunnels.ms/api/products/${id}`
+          `https://localhost/api/products/${id}`
         );
         if (response.ok) {
           setProduct(await response.json());

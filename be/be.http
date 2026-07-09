@@ -1,4 +1,4 @@
-@be_HostAddress = https://3254jhsj-5029.asse.devtunnels.ms
+@be_HostAddress = https://localhost
 
 GET {{be_HostAddress}}/weatherforecast/
 Accept: application/json

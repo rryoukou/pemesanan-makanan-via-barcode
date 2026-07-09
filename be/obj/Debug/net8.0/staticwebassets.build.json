@@ -1,11 +1,77 @@
 {
   "Version": 1,
-  "Hash": "IqCbgSvC46R6Hl5a0JGXSNh9Rqoi6wIQFHKBOgm4oSk=",
+  "Hash": "Fo9Iiw1XAO4WpjSwIjqgZXYxit2lw1fRpEG+rHO6gKk=",
   "Source": "be",
   "BasePath": "_content/be",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "be\\wwwroot",
+      "Source": "be",
+      "ContentRoot": "C:\\3PM\\pemesanan makanan via barcode\\be\\wwwroot\\",
+      "BasePath": "_content/be",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\3PM\\pemesanan makanan via barcode\\be\\wwwroot\\uploads\\17953a4e-178e-4196-8918-a036303a2572.jpg",
+      "SourceId": "be",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\3PM\\pemesanan makanan via barcode\\be\\wwwroot\\",
+      "BasePath": "_content/be",
+      "RelativePath": "uploads/17953a4e-178e-4196-8918-a036303a2572.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\17953a4e-178e-4196-8918-a036303a2572.jpg"
+    },
+    {
+      "Identity": "C:\\3PM\\pemesanan makanan via barcode\\be\\wwwroot\\uploads\\a9a4bc65-1f5f-408c-8417-e7dfeacfde63.webp",
+      "SourceId": "be",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\3PM\\pemesanan makanan via barcode\\be\\wwwroot\\",
+      "BasePath": "_content/be",
+      "RelativePath": "uploads/a9a4bc65-1f5f-408c-8417-e7dfeacfde63.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\a9a4bc65-1f5f-408c-8417-e7dfeacfde63.webp"
+    },
+    {
+      "Identity": "C:\\3PM\\pemesanan makanan via barcode\\be\\wwwroot\\uploads\\db2cd0ff-700c-4060-a2b4-fdf1cec7582f.jpg",
+      "SourceId": "be",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\3PM\\pemesanan makanan via barcode\\be\\wwwroot\\",
+      "BasePath": "_content/be",
+      "RelativePath": "uploads/db2cd0ff-700c-4060-a2b4-fdf1cec7582f.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\db2cd0ff-700c-4060-a2b4-fdf1cec7582f.jpg"
+    }
+  ]
 }

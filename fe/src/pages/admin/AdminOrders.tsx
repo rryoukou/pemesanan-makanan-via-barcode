@@ -114,8 +114,8 @@ export default function AdminOrders() {
     try {
       setLoading(true);
       const url = keyword
-        ? `https://3254jhsj-5029.asse.devtunnels.ms/api/orders?search=${keyword}`
-        : `https://3254jhsj-5029.asse.devtunnels.ms/api/orders`;
+        ? `https://localhost/api/orders?search=${keyword}`
+        : `https://localhost/api/orders`;
       const response = await fetch(url);
       const data = await response.json();
       setOrders(data);
@@ -135,7 +135,7 @@ export default function AdminOrders() {
   const handleMarkAsLunas = async (orderId: number) => {
     try {
       const response = await fetch(
-        `https://3254jhsj-5029.asse.devtunnels.ms/api/orders/${orderId}/lunas`,
+        `https://localhost/api/orders/${orderId}/lunas`,
         { method: 'PUT' }
       );
       if (response.ok) fetchOrders(search);
@@ -147,7 +147,7 @@ export default function AdminOrders() {
   const handlePrintReceipt = async (orderId: number) => {
     try {
       const response = await fetch(
-        `https://3254jhsj-5029.asse.devtunnels.ms/api/orders/${orderId}/struk`
+        `https://localhost/api/orders/${orderId}/struk`
       );
       const data = await response.json();
       if (response.ok) setSelectedReceipt(data);
@@ -200,18 +200,29 @@ export default function AdminOrders() {
             </div>
           </div>
 
-          {/* ── Search bar ── */}
+          {/* ── Search bar — mendukung scan barcode (ORD-XXXXX) ── */}
           <div className="relative">
             <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" strokeLinecap="round" />
             </svg>
             <input
               type="text"
-              placeholder="Search orders, customers, or tables..."
+              placeholder="Cari order, nama pelanggan, meja, atau scan barcode..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 rounded-xl border border-stone-200 bg-white text-[14px] text-stone-700 placeholder-stone-400 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition shadow-sm"
+              onChange={(e) => {
+                // Strip prefix ORD- dari hasil scan barcode secara otomatis
+                const raw = e.target.value;
+                const cleaned = raw.replace(/^ORD-0*/i, '');
+                setSearch(cleaned || raw);
+              }}
+              className="w-full pl-11 pr-32 py-3 rounded-xl border border-stone-200 bg-white text-[14px] text-stone-700 placeholder-stone-400 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition shadow-sm"
             />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 bg-stone-100 text-stone-400 text-[11px] font-semibold px-2.5 py-1 rounded-lg pointer-events-none">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+              </svg>
+              Scan ready
+            </div>
           </div>
 
           {/* ── Live Orders table ── */}

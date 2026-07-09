@@ -21,73 +21,71 @@ namespace be.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto dto)
         {
-            if (dto.CartItems == null || !dto.CartItems.Any())
+            try
             {
-                return BadRequest(new { message = "Keranjang belanja tidak boleh kosong." });
-            }
-
-            decimal totalAmount = 0;
-            var orderDetailsList = new List<OrderDetail>();
-
-            // Loop semua item di keranjang untuk divalidasi harganya dari database
-            foreach (var item in dto.CartItems)
-            {
-                var product = await _context.Products.FindAsync(item.ProductId);
-                if (product == null)
+                if (dto.CartItems == null || !dto.CartItems.Any())
                 {
-                    return NotFound(new { message = $"Produk dengan ID {item.ProductId} tidak ditemukan." });
+                    return BadRequest(new { message = "Keranjang belanja tidak boleh kosong." });
                 }
 
-                if (!product.IsAvailable)
+                decimal totalAmount = 0;
+                var orderDetailsList = new List<OrderDetail>();
+
+                foreach (var item in dto.CartItems)
                 {
-                    return BadRequest(new { message = $"Maaf, produk '{product.ProductName}' sedang habis." });
+                    var product = await _context.Products.FindAsync(item.ProductId);
+                    if (product == null)
+                        return NotFound(new { message = $"Produk dengan ID {item.ProductId} tidak ditemukan." });
+
+                    if (!product.IsAvailable)
+                        return BadRequest(new { message = $"Maaf, produk '{product.ProductName}' sedang habis." });
+
+                    decimal itemPrice = product.Price;
+                    totalAmount += itemPrice * item.Quantity;
+
+                    orderDetailsList.Add(new OrderDetail
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        Price = itemPrice,
+                        Notes = item.Notes
+                    });
                 }
 
-                // Hitung subtotal produk
-                decimal itemPrice = product.Price;
-                totalAmount += itemPrice * item.Quantity;
-
-                // Masukkan ke penampung detail order
-                orderDetailsList.Add(new OrderDetail
+                var order = new Order
                 {
-                    ProductId = item.ProductId,
-                    Quantity = item.Quantity,
-                    Price = itemPrice,
-                    Notes = item.Notes
+                    TableNumber = dto.TableNumber,
+                    CustomerName = dto.CustomerName,
+                    AdditionalNotes = dto.AdditionalNotes,
+                    TotalAmount = totalAmount,
+                    Status = "Belum Bayar",
+                    OrderDate = DateTime.UtcNow,
+                    OrderDetails = orderDetailsList
+                };
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Pesanan berhasil dibuat!",
+                    orderId = order.OrderId,
+                    customerName = order.CustomerName,
+                    tableNumber = order.TableNumber,
+                    totalAmount = order.TotalAmount,
+                    status = order.Status,
+                    items = order.OrderDetails.Select(od => new {
+                        od.ProductId,
+                        quantity = od.Quantity,
+                        price = od.Price,
+                        notes = od.Notes
+                    })
                 });
             }
-
-            // Simpan Data Utama Order
-            var order = new Order
+            catch (Exception ex)
             {
-                TableNumber = dto.TableNumber,
-                CustomerName = dto.CustomerName,
-                AdditionalNotes = dto.AdditionalNotes,
-                TotalAmount = totalAmount,
-                Status = "Belum Bayar", // Default awal sesuai requirement
-                OrderDate = DateTime.Now,
-                OrderDetails = orderDetailsList
-            };
-
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            // Kembalikan response sukses beserta seluruh data pesanan untuk halaman order customer
-            return Ok(new
-            {
-                message = "Pesanan berhasil dibuat!",
-                orderId = order.OrderId,
-                customerName = order.CustomerName,
-                tableNumber = order.TableNumber,
-                totalAmount = order.TotalAmount,
-                status = order.Status,
-                items = order.OrderDetails.Select(od => new {
-                    od.ProductId,
-                    quantity = od.Quantity,
-                    price = od.Price,
-                    notes = od.Notes
-                })
-            });
+                return StatusCode(500, new { message = $"Gagal membuat pesanan: {ex.Message}", detail = ex.InnerException?.Message });
+            }
         }
 
         // ADMIN & SUCCESS PAGE: LIHAT SEMUA ORDER DENGAN FITUR SEARCH NAMA / MEJA / ID

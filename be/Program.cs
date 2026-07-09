@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using be.Data;
+using Npgsql.EntityFrameworkCore.PostgreSQL; // 👈 TAMBAHKAN BARIS INI
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. DAFTARKAN KONEKSI DATABASE KE SQL SERVER
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))); // Ganti nama key connection string-nya
 
 // 2. DAFTARKAN POLICY CORS (Izinkan Frontend Mengakses API)
 builder.Services.AddCors(options =>
@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
                 policy.WithOrigins(
                           "http://localhost:5173",           // Local development
                           "http://192.168.5.103:5029",       // Backend IP (untuk CORS dari client lain)
-                          "https://3254jhsj-5029.asse.devtunnels.ms" // Dev Tunnels (backup)
+                          "https://localhost" // Dev Tunnels (backup)
                       )
                       .AllowAnyHeader()
                       .AllowAnyMethod();
